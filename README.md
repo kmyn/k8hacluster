@@ -146,17 +146,18 @@ Requirements:
 		```
 		To see if the worker node is added successfully. It may not have a label ('worker') that can be set manually later.
 
-7. To make master nodes schedulable.
+7. To make master node's schedulable.
 	- Run:
+	```
 		$ kubectl taint nodes --all node-role.kubernetes.io/master-
-
+	```
 	- To get list of nodes that are scheduleable:
-
+	```
 		$ kubectl get nodes -o go-template='{{range .items}}{{with $x := index .metadata.annotations "scheduler.alpha.kubernetes.io/taints"}}{{.}}{{end}}{{end}}'
-
+	```
 8. To test the cluster:
 		- On any master:
-		
+		```
 		$ kubectl run nginx --image=nginx --replicas=3 --port=80
 		deployment.apps/nginx created
 
@@ -204,9 +205,9 @@ Requirements:
 		</body>
 		</html>
 		$
-		
+		```
 		- POD connectivity test:
-
+		```
 		$ kubectl run nginx-server --image=nginx --port=80
 		deployment.apps/nginx-server created
 
@@ -257,7 +258,7 @@ Requirements:
 		$ kubectl delete deploy,svc nginx-server
 		deployment.extensions "nginx-server" deleted
 		service "nginx-server" deleted
-		
+		```
 
 Troubleshooting:
 ================
@@ -265,7 +266,9 @@ Troubleshooting:
 1. How to reset the system if something goes wrong:
 	- Remove nginx load balancer if installed. Follow the README in the nginx-lb.
 	- Run kubeClusterInitConfig/cleanup.sh on all the nodes.
+	```
 		$ sudo sh cleanup.sh
+	```
 
 2. Upon master nodes restart:
 	- Make sure the etcd, keepalived and the nginx-lb are running. If not running, start the old container manually.
@@ -274,5 +277,6 @@ Troubleshooting:
 
 	- Check if swap is still turned off. Otherwise turn it off using 'sudo swapoff -a'.
 	- Restart the kubelet if either or both of the above operations are performed.
+	```
 		$ sudo service kubelet restart
-
+	```

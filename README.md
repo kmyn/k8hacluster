@@ -156,7 +156,8 @@ Requirements:
 		$ kubectl get nodes -o go-template='{{range .items}}{{with $x := index .metadata.annotations "scheduler.alpha.kubernetes.io/taints"}}{{.}}{{end}}{{end}}'
 	```
 8. To test the cluster:
-   - On any master:
+
+	- On any master:
    	
 	```
 	$ kubectl run nginx --image=nginx --replicas=3 --port=80
@@ -208,7 +209,7 @@ Requirements:
 	$
 	```
 	
-	-POD connectivity test:
+	- POD connectivity test:
 	
 	```
 		$ kubectl run nginx-server --image=nginx --port=80

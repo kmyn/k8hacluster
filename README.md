@@ -50,39 +50,34 @@ Requirements:
 	If after waiting for few minutes, the master is still NotReady or the pods are restarting or not all are in Running state, something is wrong. Try restarting the kubelet (sudo service kubelet restart). If this does not solve the problem, look for troubleshooting steps.
 
 	- Copy the kubernetes certificates from the first master (the one where the above init command ran successfully) to the second and third master nodes.
-	    
-	   $ sudo scp /etc/kubernetes/pki/* user@<master-2 ip>:/home/user/pki/
-		
+	```
+	$ sudo scp /etc/kubernetes/pki/* user@<master-2 ip>:/home/user/pki/
+	```	
 	- Copy the config (kubeadm-init.yaml)  to all the three nodes and modify the nodeName in the yaml to the node name where the config has to be run.
 	- Switch to the second & third & fourth .... master nodes and perform the instructions below.
 		- Move the pki certificates to /etc/kubernetes/pki and run kubeadm init:
-		
+		  ```	
 		  $ sudo mv pki/* /etc/kubernetes/pki/
 		  $ sudo kubeadm init --ignore-preflight-errors=all --config kubeadm-init.yaml
-
+		  ```
 	  	NOTE: As the init is running, the output generated differs from the output generated when init was run on the first node. This is expected.
 
-	  	Once completed, follow the instructions provided as part of the output to create the .kube folder, copying the config etc.
-		
-        	  $ mkdir -p $HOME/.kube
-                  $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config	          
-		  $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
-	          NOTE: Network config(flannel) needs to be applied only on the first node. We need not apply it again on the second/third master init.
+		Once completed, follow the instructions provided as part of the output to create the .kube folder, copying the config etc.
+		```
+		$ mkdir -p $HOME/.kube
+		$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config	          
+		$ sudo chown $(id -u):$(id -g) $HOME/.kube/config
+		```
+		NOTE: Network config(flannel) needs to be applied only on the first node. We need not apply it again on the second/third master init.
          	- Run:
-	 
-                $ kubectl get nodes		
-                $ kubectl get pods --all-namespaces -o=wide
-
-		This will show the number of masters and the state of the pods. It may take few minutes for all the pods to be running and the nodes to turn 'Ready'.
-		Some pods restart once or twice that should be ok. But, they should not be crash loop.
-
-		$ kubectl get nodes
+	 	```
+                $ kubectl get nodes	
 		NAME             STATUS    ROLES     AGE       VERSION
 		k8-node-a   Ready     master    1h        v1.11.1
 		k8-node-b   Ready     master    1h        v1.11.1
 		k8-node-c   Ready     master    1h        v1.11.1
-		$ kubectl get pods --all-namespaces -o=wide
+		
+                $ kubectl get pods --all-namespaces -o=wide
 		NAMESPACE     NAME                                     READY     STATUS    RESTARTS   AGE       IP               NODE
 		kube-system   coredns-78fcdf6894-w7wtf            1/1       Running   0          1h        10.244.0.7       k8-node-a
 		kube-system   coredns-78fcdf6894-zztcm            1/1       Running   0          1h        10.244.0.5       k8-node-a
@@ -101,8 +96,10 @@ Requirements:
 		kube-system   kube-scheduler-k8-node-a            1/1       Running   0          1h        10.244.120.123   k8-node-a
 		kube-system   kube-scheduler-k8-node-b            1/1       Running   0          1h        10.244.120.124   k8-node-b
 		kube-system   kube-scheduler-k8-node-c            1/1       Running   0          1h        10.244.120.164   k8-node-c
-		$
-
+		
+		```
+		This will show the number of masters and the state of the pods. It may take few minutes for all the pods to be running and the nodes to turn 'Ready'.
+		Some pods restart once or twice that should be ok. But, they should not be crash loop.
 
 4. Install Keepalived.
 	- Follow the keepalived/README.

@@ -71,13 +71,13 @@ Requirements:
 		NOTE: Network config(flannel) needs to be applied only on the first node. We need not apply it again on the second/third master init.
          	- Run:
 	 	```
-                $ kubectl get nodes	
+		$ kubectl get nodes	
 		NAME             STATUS    ROLES     AGE       VERSION
 		k8-node-a   Ready     master    1h        v1.11.1
 		k8-node-b   Ready     master    1h        v1.11.1
 		k8-node-c   Ready     master    1h        v1.11.1
 		
-                $ kubectl get pods --all-namespaces -o=wide
+		$ kubectl get pods --all-namespaces -o=wide
 		NAMESPACE     NAME                                     READY     STATUS    RESTARTS   AGE       IP               NODE
 		kube-system   coredns-78fcdf6894-w7wtf            1/1       Running   0          1h        10.244.0.7       k8-node-a
 		kube-system   coredns-78fcdf6894-zztcm            1/1       Running   0          1h        10.244.0.5       k8-node-a
@@ -110,17 +110,21 @@ Requirements:
 6. To add workers to the cluster:
 	
 	- On one of the masters:
+		```
 		$ sudo kubeadm token create
 		3k8a5g.aue65i8z54z4xd7x
 		
 		$ openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
 		4908ea01832102792d641f3359efbfc8dfc64ad924128be0484f88b3933a6d27
-
-	- On the worker node:
+		```
+		- On the worker node:
+	
+		```
 		$ sudo kubeadm join <master-ip>:6443 --token 3k8a5g.aue65i8z54z4xd7x --discovery-token-ca-cert-hash sha256:4908ea01832102792d641f3359efbfc8dfc64ad924128be0484f88b3933a6d27
+		```
 		
 		After the join completes successfully:
-			
+		```
 		$ sed -i "s/<master-1 ip>:6443/<virtual ip>:16443/g" /etc/kubernetes/bootstrap-kubelet.conf
 		$ sed -i "s/<master-2 ip>:6443/<virtual ip>:16443/g" /etc/kubernetes/bootstrap-kubelet.conf
 		$ sed -i "s/<master-3 ip>:6443/<virtual ip>:16443/g" /etc/kubernetes/bootstrap-kubelet.conf
@@ -134,10 +138,12 @@ Requirements:
 		/etc/kubernetes/kubelet.conf:    server: https://<virtual ip>:16443
 
 		$ sudo systemctl restart docker kubelet
-
+		```
 	- On the master:
 		- Run:
-			$ kubectl get nodes
+		```
+		  $ kubectl get nodes
+		```
 		To see if the worker node is added successfully. It may not have a label ('worker') that can be set manually later.
 
 7. To make master nodes schedulable.

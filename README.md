@@ -156,58 +156,61 @@ Requirements:
 		$ kubectl get nodes -o go-template='{{range .items}}{{with $x := index .metadata.annotations "scheduler.alpha.kubernetes.io/taints"}}{{.}}{{end}}{{end}}'
 	```
 8. To test the cluster:
-		- On any master:
-		```
-		$ kubectl run nginx --image=nginx --replicas=3 --port=80
-		deployment.apps/nginx created
+   - On any master:
+   	
+	```
+	$ kubectl run nginx --image=nginx --replicas=3 --port=80
+	deployment.apps/nginx created
 
-		$ kubectl get pods -l=run=nginx -o wide
-		NAME                     READY     STATUS    RESTARTS   AGE       IP           NODE
-		nginx-6f858d4d45-mdtnw   1/1       Running   0          11s       10.244.2.2   k8-node-c
-		nginx-6f858d4d45-nzsdm   1/1       Running   0          11s       10.244.1.2   k8-node-b
-		nginx-6f858d4d45-x77w4   1/1       Running   0          11s       10.244.0.8   k8-node-a
+	$ kubectl get pods -l=run=nginx -o wide
+	NAME                     READY     STATUS    RESTARTS   AGE       IP           NODE
+	nginx-6f858d4d45-mdtnw   1/1       Running   0          11s       10.244.2.2   k8-node-c
+	nginx-6f858d4d45-nzsdm   1/1       Running   0          11s       10.244.1.2   k8-node-b
+	nginx-6f858d4d45-x77w4   1/1       Running   0          11s       10.244.0.8   k8-node-a
 
-		$ kubectl expose deployment nginx --type=NodePort --port=80
-		service/nginx exposed
+	$ kubectl expose deployment nginx --type=NodePort --port=80
+	service/nginx exposed
 
-		$ kubectl get svc -l=run=nginx -o wide
-		NAME      TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE       SELECTOR
-		nginx     NodePort   10.100.190.219   <none>        80:30908/TCP   9s        run=nginx
+	$ kubectl get svc -l=run=nginx -o wide
+	NAME      TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE       SELECTOR
+	nginx     NodePort   10.100.190.219   <none>        80:30908/TCP   9s        run=nginx
 		
-		NOTE: 
-			1. https does not work as nginx is running http only
-			2. The port # used below in the curl command is from the PORT(S) field in the above command output.
+	NOTE: 
+		1. https does not work as nginx is running http only
+		2. The port # used below in the curl command is from the PORT(S) field in the above command output.
 
-		$ curl http://<virtual ip>:30908
-		<!DOCTYPE html>
-		<html>
-		<head>
-		<title>Welcome to nginx!</title>
-		<style>
-		    body {
-		        width: 35em;
-		        margin: 0 auto;
-		        font-family: Tahoma, Verdana, Arial, sans-serif;
-		    }
-		</style>
-		</head>
-		<body>
-		<h1>Welcome to nginx!</h1>
-		<p>If you see this page, the nginx web server is successfully installed and
-		working. Further configuration is required.</p>
-		
-		<p>For online documentation and support please refer to
-		<a href="http://nginx.org/">nginx.org</a>.<br/>
-		Commercial support is available at
-		<a href="http://nginx.com/">nginx.com</a>.</p>
-		
-		<p><em>Thank you for using nginx.</em></p>
-		</body>
-		</html>
-		$
-		```
-		- POD connectivity test:
-		```
+	$ curl http://<virtual ip>:30908
+	<!DOCTYPE html>
+	<html>
+	<head>
+	<title>Welcome to nginx!</title>
+	<style>
+	    body {
+	        width: 35em;
+	        margin: 0 auto;
+	        font-family: Tahoma, Verdana, Arial, sans-serif;
+	    }
+	</style>
+	</head>
+	<body>
+	<h1>Welcome to nginx!</h1>
+	<p>If you see this page, the nginx web server is successfully installed and
+	working. Further configuration is required.</p>
+	
+	<p>For online documentation and support please refer to
+	<a href="http://nginx.org/">nginx.org</a>.<br/>
+	Commercial support is available at
+	<a href="http://nginx.com/">nginx.com</a>.</p>
+	
+	<p><em>Thank you for using nginx.</em></p>
+	</body>
+	</html>
+	$
+	```
+	
+	-POD connectivity test:
+	
+	```
 		$ kubectl run nginx-server --image=nginx --port=80
 		deployment.apps/nginx-server created
 
@@ -260,8 +263,8 @@ Requirements:
 		service "nginx-server" deleted
 		```
 
-Troubleshooting:
-================
+### Troubleshooting: ###
+
 
 1. How to reset the system if something goes wrong:
 	- Remove nginx load balancer if installed. Follow the README in the nginx-lb.

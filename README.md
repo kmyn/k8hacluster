@@ -26,23 +26,24 @@ Requirements:
 	- Edit the kubeClusterInitConfig/kubeadm-init.yaml file with the IP addresses and the names of the three nodes. 
           NOTE: the virtual IP has to be added to the apiServerCertSANs field along with the master nodes IP's and names.
 	- Run:
-	
-	   $ sudo kubeadm init --ignore-preflight-errors=all --config kubeadm-init.yaml
-
+	  ```
+	  $ sudo kubeadm init --ignore-preflight-errors=all --config kubeadm-init.yaml
+	  ```
 	- Once completed, follow the instructions provided as part of the output to create the .kube folder, copying the config etc.
-		
+	```	
 		$ mkdir -p $HOME/.kube
 		$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 		$ sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
+	```
 	- Apply the flannel networking config:
-		
+	```
 		$ sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+	```
 	- Run:
-	
+		```
 		$ kubectl get nodes
-		
 		$ kubectl get pods --all-namespaces -o=wide
+		```
 		
 	To make sure that there is one master and the pods are running well. If the node is NotReady (it should be Ready), wait for some time so that it is Ready. Same with the pods as well, make sure that the pods are running well without any issues before initing the other master's.
 

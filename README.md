@@ -27,14 +27,16 @@ Requirements:
           NOTE: the virtual IP has to be added to the apiServerCertSANs field along with the master nodes IP's and names.
 	- Run:
 	
-	  $ sudo kubeadm init --ignore-preflight-errors=all --config kubeadm-init.yaml
+	   $ sudo kubeadm init --ignore-preflight-errors=all --config kubeadm-init.yaml
 
 	- Once completed, follow the instructions provided as part of the output to create the .kube folder, copying the config etc.
+		
 		$ mkdir -p $HOME/.kube
 		$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 		$ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 	- Apply the flannel networking config:
+		
 		$ sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
 	- Run:
 	
@@ -42,33 +44,31 @@ Requirements:
 		
 		$ kubectl get pods --all-namespaces -o=wide
 		
-		To make sure that there is one master and the pods are running well. If the node is NotReady (it should be Ready), wait for some time so that it is Ready. Same with the pods as well, make sure that the pods are running well without any issues before initing the other master's.
+	To make sure that there is one master and the pods are running well. If the node is NotReady (it should be Ready), wait for some time so that it is Ready. Same with the pods as well, make sure that the pods are running well without any issues before initing the other master's.
 
-		If after waiting for few minutes, the master is still NotReady or the pods are restarting or not all are in Running state, something is wrong. Try restarting the kubelet (sudo service kubelet restart). If this does not solve the problem, look for troubleshooting steps.
+	If after waiting for few minutes, the master is still NotReady or the pods are restarting or not all are in Running state, something is wrong. Try restarting the kubelet (sudo service kubelet restart). If this does not solve the problem, look for troubleshooting steps.
 
 	- Copy the kubernetes certificates from the first master (the one where the above init command ran successfully) to the second and third master nodes.
-	
-	  $ sudo scp /etc/kubernetes/pki/* user@<master-2 ip>:/home/user/pki/
+	    
+	   $ sudo scp /etc/kubernetes/pki/* user@<master-2 ip>:/home/user/pki/
 		
-        - Copy the config (kubeadm-init.yaml)  to all the three nodes and modify the nodeName in the yaml to the node name where the config has to be run.
+	- Copy the config (kubeadm-init.yaml)  to all the three nodes and modify the nodeName in the yaml to the node name where the config has to be run.
 	- Switch to the second & third & fourth .... master nodes and perform the instructions below.
-		- Move the pki certificates to /etc/kubernetes/pki as follows:
+		- Move the pki certificates to /etc/kubernetes/pki and run kubeadm init:
 		
 		  $ sudo mv pki/* /etc/kubernetes/pki/
-		- Run:
-		
 		  $ sudo kubeadm init --ignore-preflight-errors=all --config kubeadm-init.yaml
 
-		  NOTE: As the init is running, the output generated differs from the output generated when init was run on the first node. This is expected.
+	  	NOTE: As the init is running, the output generated differs from the output generated when init was run on the first node. This is expected.
 
-	        - Once completed, follow the instructions provided as part of the output to create the .kube folder, copying the config etc.
+	  	Once completed, follow the instructions provided as part of the output to create the .kube folder, copying the config etc.
 		
         	  $ mkdir -p $HOME/.kube
                   $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config	          
 		  $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 	          NOTE: Network config(flannel) needs to be applied only on the first node. We need not apply it again on the second/third master init.
-         - Run:
+         	- Run:
 	 
                 $ kubectl get nodes		
                 $ kubectl get pods --all-namespaces -o=wide
@@ -80,7 +80,7 @@ Requirements:
 		NAME             STATUS    ROLES     AGE       VERSION
 		k8-node-a   Ready     master    1h        v1.11.1
 		k8-node-b   Ready     master    1h        v1.11.1
-		k8-node-c    Ready     master    1h        v1.11.1
+		k8-node-c   Ready     master    1h        v1.11.1
 		$ kubectl get pods --all-namespaces -o=wide
 		NAMESPACE     NAME                                     READY     STATUS    RESTARTS   AGE       IP               NODE
 		kube-system   coredns-78fcdf6894-w7wtf            1/1       Running   0          1h        10.244.0.7       k8-node-a

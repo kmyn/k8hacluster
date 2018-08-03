@@ -2,12 +2,14 @@
 Setting up a Kubernetes HA cluster on bare metal:
 =================================================
 
-Requirements:
+**Requirements:**
 
  - Three Ubuntu nodes minimum (these would be master nodes)
     - This will handle at least one master failure. To handle two master failures, we need five master nodes.
  - Worker nodes (optional can be 0 to n)
  - Virtual IP (for keepalived)
+
+**Setup:**
 
 1. Prep the systems:
 	- Turn off swap on all the nodes (sudo swapoff -a)

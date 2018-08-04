@@ -47,22 +47,22 @@ Setting up a Kubernetes HA cluster on bare metal:
 		$ kubectl get pods --all-namespaces -o=wide
 		```
 		
-	To make sure that there is one master and the pods are running well. If the node is NotReady (it should be Ready), wait for some time so that it is Ready. Same with the pods as well, make sure that the pods are running well without any issues before initing the other master's.
-
-	If after waiting for few minutes, the master is still NotReady or the pods are restarting or not all are in Running state, something is wrong. Try restarting the kubelet (sudo service kubelet restart). If this does not solve the problem, look for troubleshooting steps.
+	Make sure that there is one master and the pods are all running well. If the node is NotReady (ideally it should be Ready), wait for some time for it to be Ready. Same with the pods as well, make sure that the pods are all Running without any issues before initing the other master's.
+	
+If after waiting for few minutes, the master is still in NotReady state or the pods are restarting or not all are in Running state, something is wrong. Try restarting the kubelet (sudo service kubelet restart). If this does not solve the problem, look for troubleshooting steps.
 
 	- Copy the kubernetes certificates from the first master (the one where the above init command ran successfully) to the second and third master nodes.
 	```
 	$ sudo scp /etc/kubernetes/pki/* user@<master-2 ip>:/home/user/pki/
+	$ sudo scp /etc/kubernetes/pki/* user@<master-3 ip>:/home/user/pki/
 	```	
-	- Copy the config (kubeadm-init.yaml)  to all the three nodes and modify the nodeName in the yaml to the node name where the config has to be run.
-	- Switch to the second & third & fourth .... master nodes and perform the instructions below.
+	- Copy the config (kubeClusterInitConfig/kubeadm-init.yaml)  to all the three nodes and modify the nodeName in the yaml to the node name where the config has to be run.
 		- Move the pki certificates to /etc/kubernetes/pki and run kubeadm init:
 		  ```	
 		  $ sudo mv pki/* /etc/kubernetes/pki/
 		  $ sudo kubeadm init --ignore-preflight-errors=all --config kubeadm-init.yaml
 		  ```
-	  	NOTE: As the init is running, the output generated differs from the output generated when init was run on the first node. This is expected.
+	  	NOTE: When the kubeadm init runs, the output generated differs from the output generated when init was run on the first node. This is expected.
 
 		Once completed, follow the instructions provided as part of the output to create the .kube folder, copying the config etc.
 		```
@@ -70,7 +70,7 @@ Setting up a Kubernetes HA cluster on bare metal:
 		$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config	          
 		$ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 		```
-		NOTE: Network config(flannel) needs to be applied only on the first node. We need not apply it again on the second/third master init.
+		NOTE: Network config(flannel) needs to be applied only on the first master node. We need not apply it again on subsequent masters.
          	- Run:
 	 	```
 		$ kubectl get nodes	
@@ -104,10 +104,10 @@ Setting up a Kubernetes HA cluster on bare metal:
 		Some pods restart once or twice that should be ok. But, they should not be crash loop.
 
 4. Install Keepalived.
-	- Follow the keepalived/README.
+	- Follow keepalived/README.
 
 5. Install nginx load balancer to access the api server.
-	- Follow the nginx-lb/README.
+	- Follow nginx-lb/README.
 
 6. To add workers to the cluster:
 	

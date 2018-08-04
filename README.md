@@ -1,5 +1,5 @@
 
-Setting up a Kubernetes HA cluster on bare metal:
+Setting up a Kubernetes HA cluster on Bare Metal:
 =================================================
 
 **Requirements:**

@@ -270,7 +270,7 @@ If after waiting for few minutes, the master is still in NotReady state or the p
 
 
 1. How to reset the system if something goes wrong:
-	- Remove nginx load balancer if installed. Follow the README in the nginx-lb.
+	- Remove nginx load balancer if installed. Follow the Troubleshooting section in nginx-lb/README .
 	- Run kubeClusterInitConfig/cleanup.sh on all the nodes.
 	```
 		$ sudo sh cleanup.sh
@@ -278,9 +278,6 @@ If after waiting for few minutes, the master is still in NotReady state or the p
 
 2. Upon master nodes restart:
 	- Make sure the etcd, keepalived and the nginx-lb are running. If not running, start the old container manually.
-		Example: docker start etcd
-			 docker start keepalived			
-
 	- Check if swap is still turned off. Otherwise turn it off using 'sudo swapoff -a'.
 	- Restart the kubelet if either or both of the above operations are performed.
 	```
